@@ -1,0 +1,501 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+:root {
+  --font-display: 'Work Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Primary navy */
+  --navy: #12345B;
+  --navy-dark: #0B2742;
+  --navy-10: rgba(18,52,91,0.10);
+  --navy-20: rgba(18,52,91,0.20);
+
+  /* Neutrals — warm */
+  --bg: #F6F5F1;
+  --bg-warm: #EFEDE8;
+  --surface: #FFFFFF;
+  --border: #D5D7D4;
+  --border-light: #E7E6E1;
+  --text: #17212B;
+  --text-secondary: #66727A;
+  --text-muted: #8E9BAA;
+
+  /* Semantic */
+  --green: #3F6B52;
+  --green-bg: rgba(63,107,82,0.10);
+  --amber: #A2762D;
+  --amber-bg: rgba(162,118,45,0.12);
+  --red: #9B4141;
+  --red-bg: rgba(155,65,65,0.10);
+
+  /* Accent — saffron/terracotta, used sparingly */
+  --saffron: #C47A32;
+  --saffron-dark: #A6621A;
+  --saffron-bg: rgba(196,122,50,0.10);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--text);
+}
+
+.font-mono, .complaint-id {
+  font-family: var(--font-mono);
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C9C8C3; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #A0A09A; }
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.sidebar {
+  background: var(--navy-dark);
+  min-height: 100vh;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 4px;
+  color: rgba(255,255,255,0.55);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+  margin-bottom: 2px;
+}
+.sidebar-link:hover {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+}
+.sidebar-link.active {
+  background: var(--navy);
+  color: #fff;
+}
+
+/* ── Stat cards ────────────────────────────────────────────────────────────── */
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px;
+}
+
+/* ── Data table ──────────────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.data-table th {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg); }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+}
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--navy-dark); }
+
+/* Saffron CTA — used ONLY for the main "Report an Issue" action */
+.btn-saffron {
+  background: var(--saffron);
+  color: #fff;
+}
+.btn-saffron:hover { background: var(--saffron-dark); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--bg); }
+
+.btn-success {
+  background: var(--green);
+  color: #fff;
+}
+.btn-success:hover { background: #335844; }
+
+.btn-danger {
+  background: var(--red);
+  color: #fff;
+}
+.btn-danger:hover { background: #7E3232; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--navy);
+  color: var(--navy);
+}
+.btn-outline:hover { background: var(--navy-10); }
+
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ── Form elements ───────────────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 13.5px;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.12s;
+  font-family: var(--font-body);
+}
+.form-input:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 2px var(--navy-10);
+}
+.form-input::placeholder { color: var(--text-muted); }
+.form-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
+}
+.form-group { margin-bottom: 15px; }
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* ── Badges ─────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+/* Status badges — muted, institutional */
+.badge-reported  { background: var(--navy-10);  color: var(--navy); }
+.badge-assigned  { background: var(--navy);      color: #fff; }
+.badge-inprogress { background: var(--navy-dark); color: #fff; }
+.badge-resolved  { background: var(--green-bg);  color: var(--green); }
+.badge-underreview { background: var(--amber-bg); color: var(--amber); }
+.badge-closed    { background: var(--border-light); color: var(--text-secondary); }
+.badge-escalated { background: var(--red-bg);    color: var(--red); }
+
+/* Priority badges */
+.badge-low    { background: var(--green-bg);  color: var(--green); }
+.badge-medium { background: var(--amber-bg);  color: var(--amber); }
+.badge-high   { background: var(--red-bg);    color: var(--red); }
+
+/* ── Timeline ───────────────────────────────────────────────────────────── */
+.timeline-step {
+  display: flex;
+  gap: 14px;
+  position: relative;
+}
+.timeline-step::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 28px;
+  bottom: -14px;
+  width: 1px;
+  background: var(--border);
+}
+.timeline-step:last-child::before { display: none; }
+.timeline-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.timeline-dot-done   { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+.timeline-dot-active { background: var(--navy);     color: #fff; }
+.timeline-dot-pending { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
+
+/* ── Modal ───────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11,39,66,0.45);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  background: var(--surface);
+  border-radius: 5px;
+  padding: 26px 28px;
+  min-width: 480px;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}
+
+/* ── App layout ──────────────────────────────────────────────────────────── */
+.app-shell { display: flex; min-height: 100vh; }
+.main-content {
+  flex: 1;
+  overflow: auto;
+  padding: 26px 30px;
+  background: var(--bg);
+}
+
+/* ── Escalation ──────────────────────────────────────────────────────────── */
+.escalation-banner {
+  background: var(--red-bg);
+  border: 1px solid rgba(155,65,65,0.25);
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--red);
+}
+
+/* ── Topbar ──────────────────────────────────────────────────────────────── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 11px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Logo ────────────────────────────────────────────────────────────────── */
+.civicwatch-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--navy);
+}
+.civicwatch-logo span { color: var(--saffron); }
+
+/* ── Section header ──────────────────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  color: var(--navy);
+}
+
+/* ── Tab bar ─────────────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-item {
+  padding: 12px 0;
+  border-bottom: 2px solid transparent;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tab-item:hover { color: var(--navy); }
+.tab-item.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+
+/* ── Upload area ─────────────────────────────────────────────────────────── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.12s;
+  background: var(--surface);
+}
+.upload-area:hover { border-color: var(--navy); background: rgba(18,52,91,0.04); }
+
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+.progress-bar { height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; background: var(--navy); transition: width 0.3s; }
+
+/* ── Complaint card (list) ───────────────────────────────────────────────── */
+.complaint-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.complaint-card:hover { border-color: var(--navy); }
+
+/* ── Chart container ─────────────────────────────────────────────────────── */
+.chart-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px;
+}
+
+/* ── Complaint ID ─────────────────────────────────────────────────────────── */
+.complaint-id {
+  background: var(--navy-10);
+  color: var(--navy);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* ── Search icon ─────────────────────────────────────────────────────────── */
+.search-bar { position: relative; flex: 1; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; }
+.search-input { padding-left: 32px; }
+
+/* ── Landing page ────────────────────────────────────────────────────────── */
+
+/* Nav */
+.landing-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Hero — split, no gradient */
+.landing-hero {
+  background: var(--surface);
+  padding: 60px 0;
+}
+
+/* How-it-works step */
+.hiw-step {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.hiw-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* Stats strip */
+.stats-strip { background: var(--navy-dark); }
+
+/* Recently resolved card */
+.resolved-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px;
+}
+
+/* Issue type icon pill */
+.issue-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.12s;
+  background: var(--surface);
+}
+.issue-pill:hover { border-color: var(--navy); }
+
+/* Dept list */
+.dept-tag {
+  display: inline-block;
+  padding: 8px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.dept-tag:hover {
+  border-color: var(--navy);
+  background: var(--navy-10);
+}
