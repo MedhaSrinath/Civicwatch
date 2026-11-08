@@ -1,4 +1,4 @@
-import type { Screen } from '../types';
+import { Link } from 'react-router-dom';
 
 function CivicLogo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizes = { sm: 'text-base', md: 'text-xl', lg: 'text-3xl' };
@@ -9,7 +9,7 @@ function CivicLogo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   );
 }
 
-export function LandingPage({ navigate }: { navigate: (s: Screen) => void }) {
+export function LandingPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', fontFamily: 'var(--font-body)' }}>
 
@@ -25,10 +25,10 @@ export function LandingPage({ navigate }: { navigate: (s: Screen) => void }) {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button className="btn btn-secondary btn-sm" onClick={() => navigate('login')}>Login</button>
-            <button className="btn btn-saffron btn-sm" style={{ fontWeight: 600 }} onClick={() => navigate('register')}>
+            <Link to="/login" className="btn btn-secondary btn-sm" style={{ textDecoration: 'none' }}>Login</Link>
+            <Link to="/register" className="btn btn-saffron btn-sm" style={{ fontWeight: 600, textDecoration: 'none' }}>
               Report an Issue
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -49,8 +49,8 @@ export function LandingPage({ navigate }: { navigate: (s: Screen) => void }) {
               Report civic problems in your ward, track their progress through the right department, and verify that issues are actually resolved.
             </p>
             <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
-              <button className="btn btn-saffron" onClick={() => navigate('register')}>Report an Issue</button>
-              <button className="btn btn-outline" onClick={() => navigate('login')}>Sign In</button>
+              <Link to="/register" className="btn btn-saffron" style={{ textDecoration: 'none' }}>Report an Issue</Link>
+              <Link to="/login" className="btn btn-outline" style={{ textDecoration: 'none' }}>Sign In</Link>
             </div>
             <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--text-secondary)' }}>
