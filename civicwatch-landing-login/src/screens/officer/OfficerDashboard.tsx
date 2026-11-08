@@ -94,141 +94,189 @@ export function OfficerDashboard() {
     }
   };
 
+  const counts = {
+    total: complaints.length,
+    active: complaints.filter(c => ['In Progress', 'Assigned', 'Reopened'].includes(c.status)).length,
+    resolved: complaints.filter(c => c.status === 'Resolved').length,
+    closed: complaints.filter(c => c.status === 'Closed').length
+  };
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen flex flex-col selection:bg-[#C47A32]/20" style={{ background: '#F4F3EF' }}>
       <Navbar />
 
-      <main className="main-content flex-1" style={{ maxWidth: 1100, margin: '0 auto', width: '100%', padding: '28px 24px' }}>
+      <main className="main-content flex-1 max-w-6xl mx-auto w-full px-6 py-10">
         {/* Header */}
-        <div className="section-header">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="section-title">Officer Dashboard</h1>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-              Manage and resolve civic complaints assigned to your department
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#C47A32] mb-1">
+              Field Operations Portal
+            </div>
+            <h1 className="text-3xl font-black text-[#12345B] tracking-tight font-display">
+              Officer Work Queue
+            </h1>
+            <p className="text-xs text-[#66727A] mt-1">
+              Review assigned civic complaints, update progress notes, and upload photo proof before resolving
             </p>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="stat-card">
-            <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Assigned to Me</div>
-            <div className="text-2xl font-bold mt-1" style={{ color: 'var(--navy)' }}>{complaints.length}</div>
-          </div>
-          <div className="stat-card">
-            <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Active / In Progress</div>
-            <div className="text-2xl font-bold mt-1" style={{ color: 'var(--amber)' }}>
-              {complaints.filter(c => c.status === 'In Progress' || c.status === 'Assigned' || c.status === 'Reopened').length}
+        {/* ── Metric Tiles ─────────────────────────────────────────────── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-5 shadow-xs flex items-center justify-between">
+            <div>
+              <div className="text-[11px] uppercase font-bold text-[#8E9BAA]">Assigned to Me</div>
+              <div className="text-3xl font-black text-[#12345B] mt-1 font-display">{counts.total}</div>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-[#12345B]/10 text-[#12345B] flex items-center justify-center text-lg">
+              🎯
             </div>
           </div>
-          <div className="stat-card">
-            <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Resolved</div>
-            <div className="text-2xl font-bold mt-1" style={{ color: 'var(--green)' }}>
-              {complaints.filter(c => c.status === 'Resolved').length}
+
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-5 shadow-xs flex items-center justify-between">
+            <div>
+              <div className="text-[11px] uppercase font-bold text-[#8E9BAA]">Active / Pending Action</div>
+              <div className="text-3xl font-black text-[#A2762D] mt-1 font-display">{counts.active}</div>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center text-lg">
+              ⚡
             </div>
           </div>
-          <div className="stat-card">
-            <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Closed by Citizen</div>
-            <div className="text-2xl font-bold mt-1" style={{ color: 'var(--text-secondary)' }}>
-              {complaints.filter(c => c.status === 'Closed').length}
+
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-5 shadow-xs flex items-center justify-between">
+            <div>
+              <div className="text-[11px] uppercase font-bold text-[#8E9BAA]">Resolved (Awaiting Citizen)</div>
+              <div className="text-3xl font-black text-emerald-700 mt-1 font-display">{counts.resolved}</div>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center text-lg">
+              ✓
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-5 shadow-xs flex items-center justify-between">
+            <div>
+              <div className="text-[11px] uppercase font-bold text-[#8E9BAA]">Closed & Verified</div>
+              <div className="text-3xl font-black text-[#66727A] mt-1 font-display">{counts.closed}</div>
+            </div>
+            <div className="w-10 h-10 rounded-xl bg-slate-500/10 text-slate-700 flex items-center justify-center text-lg">
+              🏁
             </div>
           </div>
         </div>
 
-        {/* Filter tabs */}
-        <div className="tab-bar mb-6 overflow-x-auto">
-          {['all', 'assigned', 'in progress', 'reopened', 'resolved', 'closed'].map((t) => (
-            <div
-              key={t}
-              className={`tab-item capitalize whitespace-nowrap ${filter === t ? 'active' : ''}`}
-              onClick={() => setFilter(t)}
-            >
-              {t} {t === 'all' ? `(${complaints.length})` : `(${complaints.filter(c => c.status.toLowerCase() === t).length})`}
-            </div>
-          ))}
+        {/* ── Status Tab Bar ───────────────────────────────────────────── */}
+        <div className="bg-white rounded-2xl border border-[#D5D7D4] p-3 mb-6 flex items-center gap-1 overflow-x-auto shadow-xs">
+          {['all', 'assigned', 'in progress', 'reopened', 'resolved', 'closed'].map((t) => {
+            const isActive = filter === t;
+            const count = t === 'all'
+              ? complaints.length
+              : complaints.filter(c => c.status.toLowerCase() === t).length;
+
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setFilter(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-[#12345B] text-white shadow-xs'
+                    : 'text-[#66727A] hover:bg-[#F6F5F1] hover:text-[#12345B]'
+                }`}
+              >
+                <span>{t}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                  isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-[#8E9BAA]'
+                }`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* List */}
+        {/* ── Complaint Cards List ─────────────────────────────────────── */}
         {loading ? (
-          <div className="text-center py-12" style={{ color: 'var(--text-muted)' }}>
-            Loading assigned complaints...
+          <div className="text-center py-16 bg-white rounded-2xl border border-[#D5D7D4]">
+            <div className="w-8 h-8 border-2 border-[#12345B] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+            <div className="text-xs text-[#8E9BAA] font-mono">Loading assigned complaints...</div>
           </div>
         ) : filteredComplaints.length === 0 ? (
-          <div className="card text-center py-12 px-6">
-            <div className="text-base font-semibold mb-2" style={{ color: 'var(--navy)' }}>
-              No complaints found
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] text-center py-16 px-6">
+            <div className="w-12 h-12 rounded-2xl bg-[#F6F5F1] text-2xl flex items-center justify-center mx-auto mb-3">
+              🎉
             </div>
-            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            <h3 className="text-base font-bold text-[#12345B] mb-1">Queue is clear!</h3>
+            <p className="text-xs text-[#66727A]">
               {filter === 'all'
-                ? 'No civic complaints have been assigned to you yet.'
-                : `No complaints with status "${filter}".`}
+                ? 'No complaints currently assigned to you.'
+                : `No complaints found with status "${filter}".`}
             </p>
           </div>
         ) : (
           <div className="space-y-4">
             {filteredComplaints.map(complaint => (
-              <div key={complaint._id} className="card p-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+              <div
+                key={complaint._id}
+                className="bg-white rounded-2xl border border-[#D5D7D4] p-6 hover:border-[#12345B] shadow-xs transition-all"
+              >
+                {/* Header Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="complaint-id">{complaint.complaintId}</span>
-                    <span className={`badge ${getStatusBadgeClass(complaint.status)}`}>
+                    <span className="complaint-id text-xs font-bold">{complaint.complaintId}</span>
+                    <span className={`badge ${getStatusBadgeClass(complaint.status)} text-[10px]`}>
                       {complaint.status}
                     </span>
-                    <span className={`badge ${getPriorityBadgeClass(complaint.priority)}`}>
+                    <span className={`badge ${getPriorityBadgeClass(complaint.priority)} text-[10px]`}>
                       {complaint.priority}
                     </span>
                     {complaint.status === 'Reopened' && (
-                      <span className="badge badge-escalated">Disputed by Citizen</span>
+                      <span className="badge badge-escalated text-[10px] animate-pulse">
+                        ⚠️ Citizen Disputed Resolution
+                      </span>
                     )}
                   </div>
-                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  <div className="text-[11px] text-[#8E9BAA] font-mono">
                     Reported on {new Date(complaint.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </div>
                 </div>
 
-                <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--navy)' }}>
-                  {complaint.title}
-                </h3>
+                <h3 className="text-lg font-bold text-[#12345B] mb-2">{complaint.title}</h3>
+                <p className="text-xs text-[#66727A] line-clamp-2 leading-relaxed mb-4">{complaint.description}</p>
 
-                <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
-                  {complaint.description}
-                </p>
-
-                {/* Location + Category */}
-                <div className="flex flex-wrap items-center gap-4 text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
+                {/* Metadata tags */}
+                <div className="flex flex-wrap items-center gap-4 text-xs text-[#66727A] mb-4">
                   <span>📍 {complaint.location}</span>
                   <span>📂 {typeof complaint.category === 'object' ? complaint.category.name : 'Uncategorized'}</span>
                   <span>👤 {complaint.citizen?.name} ({complaint.citizen?.email})</span>
                 </div>
 
                 {/* Status explanation */}
-                <div
-                  className="p-2.5 rounded text-xs mb-4 flex items-start gap-2"
-                  style={{ background: 'var(--bg-warm)', borderLeft: '3px solid var(--navy)' }}
-                >
-                  <span className="font-bold text-xs" style={{ color: 'var(--navy)' }}>Status:</span>
-                  <span style={{ color: 'var(--text)' }}>{complaint.statusExplanation}</span>
+                <div className="p-3 rounded-xl bg-[#F6F5F1] border-l-4 border-[#12345B] text-xs flex items-start gap-2 mb-5">
+                  <span className="font-bold text-[#12345B] shrink-0 text-[11px] uppercase tracking-wide">Status:</span>
+                  <span className="text-[#17212B]">{complaint.statusExplanation}</span>
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t" style={{ borderColor: 'var(--border-light)' }}>
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#E7E6E1]">
                   <button
-                    className="btn btn-outline btn-sm"
+                    type="button"
+                    className="btn btn-outline btn-sm text-xs rounded-lg cursor-pointer"
                     onClick={() => navigate(`/complaint/${complaint._id}`)}
                   >
-                    View Full Details & History
+                    View Full Evidence & Timeline →
                   </button>
 
                   {complaint.status !== 'Closed' && (
                     <button
-                      className="btn btn-primary btn-sm"
+                      type="button"
+                      className="btn btn-primary btn-sm text-xs rounded-lg font-bold cursor-pointer"
                       onClick={() => {
                         setSelectedComplaint(complaint);
                         setNewStatus(complaint.status === 'Assigned' || complaint.status === 'Reopened' ? 'In Progress' : 'Resolved');
                         setRemarks(complaint.resolutionRemarks || '');
                       }}
                     >
-                      Update Status / Resolve →
+                      Update Status / Upload Proof →
                     </button>
                   )}
                 </div>
@@ -240,57 +288,64 @@ export function OfficerDashboard() {
         {/* Modal for Status Update */}
         {selectedComplaint && (
           <div className="modal-overlay" onClick={() => setSelectedComplaint(null)}>
-            <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal rounded-2xl" onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold" style={{ color: 'var(--navy)' }}>
+                  <h3 className="text-lg font-black text-[#12345B]">
                     Update Complaint Status
                   </h3>
                   <span className="complaint-id text-xs mt-1">{selectedComplaint.complaintId}</span>
                 </div>
                 <button
-                  className="text-gray-400 hover:text-gray-600 text-lg"
+                  type="button"
+                  className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
                   onClick={() => setSelectedComplaint(null)}
                 >
                   ✕
                 </button>
               </div>
 
-              <form onSubmit={handleUpdateStatus}>
-                <div className="form-group">
-                  <label className="form-label">New Status *</label>
+              <form onSubmit={handleUpdateStatus} className="space-y-4">
+                <div>
+                  <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">
+                    Target Status *
+                  </label>
                   <select
-                    className="form-input"
+                    className="form-input rounded-lg text-sm"
                     value={newStatus}
                     onChange={e => setNewStatus(e.target.value as 'In Progress' | 'Resolved')}
                     required
                   >
-                    <option value="In Progress">In Progress (Work ongoing)</option>
+                    <option value="In Progress">In Progress (Field crew dispatched / work ongoing)</option>
                     <option value="Resolved">Resolved (Work completed, ready for citizen verification)</option>
                   </select>
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Progress / Resolution Remarks *</label>
+                <div>
+                  <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">
+                    Resolution / Progress Remarks *
+                  </label>
                   <textarea
-                    className="form-input"
+                    className="form-input rounded-lg text-sm"
                     rows={4}
-                    placeholder={newStatus === 'Resolved' ? 'Explain what action was taken to fix the issue...' : 'Describe what progress has been made...'}
+                    placeholder={newStatus === 'Resolved' ? 'Describe the work executed to fix the problem...' : 'Describe current progress made...'}
                     value={remarks}
                     onChange={e => setRemarks(e.target.value)}
                     required
                   />
-                  <span className="text-xs mt-1 block" style={{ color: 'var(--text-muted)' }}>
-                    This explanation will be visible to the citizen and admin for transparency.
+                  <span className="text-[11px] text-[#8E9BAA] mt-1 block">
+                    This transparent reason will be immediately visible to the citizen and admin.
                   </span>
                 </div>
 
                 {newStatus === 'Resolved' && (
-                  <div className="form-group">
-                    <label className="form-label">Resolution Photograph (Optional)</label>
+                  <div>
+                    <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">
+                      Resolution Proof Photograph (Optional)
+                    </label>
                     <input
                       type="file"
-                      className="form-input"
+                      className="form-input rounded-lg text-sm"
                       accept="image/jpeg,image/png,image/webp,image/gif"
                       onChange={e => {
                         if (e.target.files && e.target.files[0]) {
@@ -298,26 +353,26 @@ export function OfficerDashboard() {
                         }
                       }}
                     />
-                    <span className="text-xs mt-1 block" style={{ color: 'var(--text-muted)' }}>
-                      Upload a photo showing the completed work as evidence.
+                    <span className="text-[11px] text-[#8E9BAA] mt-1 block">
+                      Upload evidence showing the completed repair for citizen inspection.
                     </span>
                   </div>
                 )}
 
-                <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t" style={{ borderColor: 'var(--border-light)' }}>
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E7E6E1]">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-secondary px-4 py-2 text-xs rounded-lg cursor-pointer"
                     onClick={() => setSelectedComplaint(null)}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary"
+                    className="btn btn-primary px-5 py-2 text-xs font-bold rounded-lg cursor-pointer"
                     disabled={submitting}
                   >
-                    {submitting ? 'Updating...' : 'Save & Update Status'}
+                    {submitting ? 'Updating...' : 'Save & Notify Citizen'}
                   </button>
                 </div>
               </form>
