@@ -18,7 +18,7 @@ export function LandingPage() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
             <CivicLogo size="md" />
-            <div style={{ display: 'flex', gap: 24 }}>
+            <div className="hidden md:flex gap-6">
               <a href="#how-it-works" style={{ fontSize: 13.5, color: 'var(--text-secondary)', textDecoration: 'none', cursor: 'pointer' }}>How It Works</a>
               <a href="#resolved" style={{ fontSize: 13.5, color: 'var(--text-secondary)', textDecoration: 'none', cursor: 'pointer' }}>Recently Resolved</a>
               <a href="#departments" style={{ fontSize: 13.5, color: 'var(--text-secondary)', textDecoration: 'none', cursor: 'pointer' }}>Departments</a>
@@ -35,14 +35,14 @@ export function LandingPage() {
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border-light)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '60px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center" style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 60px' }}>
 
           {/* Left — copy */}
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--saffron)', marginBottom: 18 }}>
               Municipal Issue Reporting Platform
             </div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 52, fontWeight: 800, lineHeight: 1.08, letterSpacing: '-0.025em', color: 'var(--navy)', marginBottom: 20 }}>
+            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-5" style={{ fontFamily: 'var(--font-display)', color: 'var(--navy)' }}>
               Report.<br />Track.<br />Resolve.
             </h1>
             <p style={{ fontSize: 15.5, lineHeight: 1.65, color: 'var(--text-secondary)', marginBottom: 32, maxWidth: 420 }}>
@@ -105,7 +105,7 @@ export function LandingPage() {
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', textAlign: 'center', marginBottom: 22 }}>
             Report issues related to
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 10 }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
             {[
               { icon: <PotholeIcon />, label: 'Potholes' },
               { icon: <GarbageIcon />, label: 'Garbage' },
@@ -126,7 +126,7 @@ export function LandingPage() {
       {/* ── How It Works ────────────────────────────────────────────────── */}
       <section id="how-it-works" style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border-light)', padding: '64px 0' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 56, alignItems: 'start' }}>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-10 md:gap-14 items-start">
 
             {/* Steps */}
             <div>
@@ -150,7 +150,7 @@ export function LandingPage() {
             </div>
 
             {/* Stats */}
-            <div style={{ paddingTop: 56 }}>
+            <div className="pt-0 md:pt-14">
               {[
                 { value: '2,847', label: 'Issues Reported' },
                 { value: '1,274', label: 'Resolved' },
@@ -169,14 +169,14 @@ export function LandingPage() {
       {/* ── Statistics ──────────────────────────────────────────────────── */}
       <section style={{ background: 'var(--navy-dark)', padding: '44px 0' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { value: '2,847', label: 'Issues Reported' },
               { value: '1,274', label: 'Issues Resolved' },
               { value: '4.6 days', label: 'Average Resolution Time' },
               { value: '18', label: 'Departments & Wards Covered' },
             ].map((s, i) => (
-              <div key={i} style={{ textAlign: 'center', padding: 20, borderRight: i < 3 ? '1px solid rgba(255,255,255,0.1)' : 'none' }}>
+              <div key={i} className="text-center p-4">
                 <div style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{s.value}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>{s.label}</div>
               </div>
@@ -196,7 +196,7 @@ export function LandingPage() {
             <a href="#" style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--navy)', textDecoration: 'none', cursor: 'pointer' }}>View all →</a>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {[
               {
                 id: 'CW-2024-08901',
