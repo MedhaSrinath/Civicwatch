@@ -1,0 +1,320 @@
+{
+  "info": {
+    "name": "CivicWatch API - CS3301 Phase 2",
+    "description": "Complete REST API collection for CivicWatch Civic Complaint Management Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Citizen",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Student Citizen\",\n  \"email\": \"student@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login (Citizen)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"priya.sharma@email.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@civic.gov.in\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Complaints Lifecycle",
+      "item": [
+        {
+          "name": "Get All Complaints (Scoped by Role)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/complaints",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints"]
+            }
+          }
+        },
+        {
+          "name": "Submit New Complaint (Citizen)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Broken streetlamp in ward 14",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Lamp post 12 has been flickering and completely off for 4 days.",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "14th Cross, 2nd Main, Bengaluru",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "REPLACE_WITH_CATEGORY_ID",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints"]
+            }
+          }
+        },
+        {
+          "name": "Assign Complaint (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department\": \"REPLACE_WITH_DEPT_ID\",\n  \"assignedOfficer\": \"REPLACE_WITH_OFFICER_ID\",\n  \"priority\": \"High\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/COMPLAINT_ID/assign",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints", "COMPLAINT_ID", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Update Status / Resolve (Officer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "status",
+                  "value": "Resolved",
+                  "type": "text"
+                },
+                {
+                  "key": "remarks",
+                  "value": "Bulb replaced, wiring secured and verified working.",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/COMPLAINT_ID/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints", "COMPLAINT_ID", "status"]
+            }
+          }
+        },
+        {
+          "name": "Citizen Verification (Feedback)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"feedback\": \"confirmed\",\n  \"remarks\": \"Verified working tonight. Thank you!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/complaints/COMPLAINT_ID/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints", "COMPLAINT_ID", "feedback"]
+            }
+          }
+        },
+        {
+          "name": "Admin Analytics & Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/complaints/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["complaints", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Metadata (Departments & Categories)",
+      "item": [
+        {
+          "name": "List Departments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/departments",
+              "host": ["{{baseUrl}}"],
+              "path": ["departments"]
+            }
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
