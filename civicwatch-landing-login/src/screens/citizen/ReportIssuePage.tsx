@@ -45,6 +45,11 @@ export function ReportIssuePage() {
     }
   };
 
+  const removePhoto = () => {
+    setPhoto(null);
+    setPhotoPreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !description || !category || !location) {
@@ -76,134 +81,187 @@ export function ReportIssuePage() {
     }
   };
 
+  const categoryIcons: Record<string, string> = {
+    'Potholes': '🕳️',
+    'Garbage': '🗑️',
+    'Streetlights': '💡',
+    'Drainage': '🌊',
+    'Water Leakage': '💧',
+    'Damaged Roads': '🚧'
+  };
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen flex flex-col selection:bg-[#C47A32]/20" style={{ background: 'var(--bg)' }}>
       <Navbar />
 
-      <main className="main-content flex-1" style={{ maxWidth: 760, margin: '0 auto', width: '100%', padding: '28px 24px' }}>
-        <div className="mb-6">
-          <Link to="/dashboard" className="text-xs hover:underline flex items-center gap-1 mb-2" style={{ color: 'var(--navy)', textDecoration: 'none' }}>
-            ← Back to Dashboard
+      <main className="main-content flex-1 max-w-4xl mx-auto w-full px-6 py-10">
+        <div className="mb-8">
+          <Link to="/dashboard" className="text-xs font-semibold hover:underline flex items-center gap-1.5 mb-3 text-[#12345B]" style={{ textDecoration: 'none' }}>
+            ← Back to My Complaints
           </Link>
-          <h1 className="section-title">Report a Civic Issue</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-            Provide accurate details and photos to help municipal authorities resolve the issue quickly.
+          <h1 className="text-3xl font-black text-[#12345B] tracking-tight">
+            Report a Civic Issue
+          </h1>
+          <p className="text-sm text-[#66727A] mt-1">
+            Provide accurate photos and location details to ensure prompt assignment to the responsible ward officer.
           </p>
         </div>
 
-        <div className="card p-6 md:p-8">
-          <form onSubmit={handleSubmit}>
+        <div className="bg-white rounded-2xl border border-[#D5D7D4] p-6 sm:p-10 shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-6">
+
+            {/* Category Selector Pills */}
+            <div>
+              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-2 block">
+                1. Select Issue Category *
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {categories.map(c => {
+                  const icon = categoryIcons[c.name] || '📌';
+                  const isSelected = category === c._id;
+                  return (
+                    <button
+                      key={c._id}
+                      type="button"
+                      onClick={() => setCategory(c._id)}
+                      className={`p-3 rounded-xl border text-left transition-all flex items-center gap-3 cursor-pointer ${
+                        isSelected
+                          ? 'border-[#12345B] bg-[#12345B]/5 shadow-xs ring-1 ring-[#12345B]'
+                          : 'border-[#D5D7D4] bg-white hover:border-[#12345B]/50 hover:bg-slate-50'
+                      }`}
+                    >
+                      <span className="text-2xl">{icon}</span>
+                      <div>
+                        <div className={`text-xs font-bold leading-tight ${isSelected ? 'text-[#12345B]' : 'text-[#17212B]'}`}>
+                          {c.name}
+                        </div>
+                        <div className="text-[10px] text-[#8E9BAA] line-clamp-1 mt-0.5">
+                          {c.description || 'Civic infrastructure'}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Title */}
-            <div className="form-group">
-              <label className="form-label">Issue Title *</label>
+            <div>
+              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-1.5 block">
+                2. Complaint Headline / Title *
+              </label>
               <input
                 type="text"
-                className="form-input"
-                placeholder="e.g. Broken streetlight on 4th Main Road"
+                className="form-input rounded-lg text-sm"
+                placeholder="e.g. Large open pothole outside Gate 2"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 maxLength={200}
                 required
               />
-              <span className="text-xs mt-1 block" style={{ color: 'var(--text-muted)' }}>
-                Keep it concise and specific ({title.length}/200)
+              <span className="text-[11px] text-[#8E9BAA] mt-1 block">
+                Be specific and concise ({title.length}/200 characters)
               </span>
             </div>
 
-            {/* Category */}
-            <div className="form-group">
-              <label className="form-label">Category *</label>
-              <select
-                className="form-input"
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-                required
-              >
-                <option value="">Select a category</option>
-                {categories.map(c => (
-                  <option key={c._id} value={c._id}>{c.name}</option>
-                ))}
-              </select>
-            </div>
-
             {/* Location */}
-            <div className="form-group">
-              <label className="form-label">Location / Landmark *</label>
+            <div>
+              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-1.5 block">
+                3. Exact Location / Nearest Landmark *
+              </label>
               <input
                 type="text"
-                className="form-input"
-                placeholder="e.g. Near HDFC Bank ATM, 8th Cross, Malleshwaram"
+                className="form-input rounded-lg text-sm"
+                placeholder="e.g. 5th Main Road, Opposite Canara Bank, Ward 12, Bengaluru"
                 value={location}
                 onChange={e => setLocation(e.target.value)}
                 required
               />
+              <span className="text-[11px] text-[#8E9BAA] mt-1 block">
+                Include ward, street number, or prominent landmark for field officers
+              </span>
             </div>
 
             {/* Description */}
-            <div className="form-group">
-              <label className="form-label">Detailed Description *</label>
+            <div>
+              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-1.5 block">
+                4. Detailed Description of the Problem *
+              </label>
               <textarea
-                className="form-input"
+                className="form-input rounded-lg text-sm"
                 rows={4}
-                placeholder="Describe the issue, how long it has persisted, and any hazards it presents..."
+                placeholder="Describe how long the issue has persisted, risks to pedestrians or vehicles, and any other relevant details..."
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 maxLength={2000}
                 required
               />
-              <span className="text-xs mt-1 block" style={{ color: 'var(--text-muted)' }}>
+              <span className="text-[11px] text-[#8E9BAA] mt-1 block">
                 {description.length}/2000 characters
               </span>
             </div>
 
-            {/* Photo upload */}
-            <div className="form-group">
-              <label className="form-label">Photo Evidence (Optional)</label>
-              <div className="upload-area">
-                <input
-                  type="file"
-                  id="photo-upload"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  onChange={handlePhotoChange}
-                  className="hidden"
-                />
-                <label htmlFor="photo-upload" className="cursor-pointer block">
-                  {photoPreview ? (
-                    <div>
-                      <img
-                        src={photoPreview}
-                        alt="Preview"
-                        className="max-h-56 mx-auto rounded mb-3 object-cover"
-                      />
-                      <span className="text-xs font-semibold" style={{ color: 'var(--navy)' }}>
-                        Click to change photo
-                      </span>
+            {/* Evidence Photo Upload */}
+            <div>
+              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-2 block">
+                5. Photographic Evidence (Recommended)
+              </label>
+
+              {photoPreview ? (
+                <div className="relative rounded-xl border border-[#D5D7D4] overflow-hidden bg-slate-50 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-[#12345B] flex items-center gap-1.5">
+                      <span>📷</span> Evidence Ready for Upload ({photo?.name})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={removePhoto}
+                      className="text-xs text-red-600 hover:text-red-800 font-bold hover:underline cursor-pointer"
+                    >
+                      Remove Photo
+                    </button>
+                  </div>
+                  <img
+                    src={photoPreview}
+                    alt="Complaint Preview"
+                    className="max-h-64 rounded-lg object-contain mx-auto border border-[#D5D7D4]"
+                  />
+                </div>
+              ) : (
+                <div className="upload-area rounded-xl p-8 border-2 border-dashed border-[#D5D7D4] hover:border-[#12345B] transition-colors bg-slate-50/50 hover:bg-slate-50">
+                  <input
+                    type="file"
+                    id="photo-upload"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    onChange={handlePhotoChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="photo-upload" className="cursor-pointer block text-center">
+                    <div className="w-12 h-12 rounded-full bg-[#12345B]/10 text-[#12345B] flex items-center justify-center text-2xl mx-auto mb-3">
+                      📷
                     </div>
-                  ) : (
-                    <div>
-                      <div className="text-2xl mb-2">📷</div>
-                      <div className="text-sm font-semibold mb-1" style={{ color: 'var(--navy)' }}>
-                        Click to upload an image
-                      </div>
-                      <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                        JPEG, PNG, WebP up to 5MB
-                      </div>
+                    <div className="text-sm font-bold text-[#12345B] mb-1">
+                      Click to upload evidence photo
                     </div>
-                  )}
-                </label>
-              </div>
+                    <div className="text-xs text-[#8E9BAA]">
+                      Supports PNG, JPG, or WebP up to 5MB
+                    </div>
+                  </label>
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t" style={{ borderColor: 'var(--border-light)' }}>
-              <Link to="/dashboard" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+            {/* Action Bar */}
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#E7E6E1]">
+              <Link to="/dashboard" className="btn btn-secondary px-5 py-2.5 text-xs font-semibold" style={{ textDecoration: 'none' }}>
                 Cancel
               </Link>
               <button
                 type="submit"
-                className="btn btn-saffron"
+                className="btn btn-saffron glow-saffron px-6 py-2.5 text-xs font-bold shadow-md cursor-pointer"
                 disabled={loading}
               >
-                {loading ? 'Submitting...' : 'Submit Complaint'}
+                {loading ? 'Submitting to Municipal Queue...' : '🚀 Submit Civic Complaint'}
               </button>
             </div>
           </form>

@@ -43,122 +43,150 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen flex selection:bg-[#C47A32]/20" style={{ background: 'var(--bg)' }}>
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-center px-12 w-96 flex-shrink-0" style={{ background: 'var(--navy-dark)' }}>
-        <div className="mb-1">
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <span className="civicwatch-logo text-xl" style={{ color: '#fff' }}>
+      <div className="hidden lg:flex flex-col justify-between p-12 w-[440px] flex-shrink-0 bg-gradient-to-br from-[#0B2742] via-[#12345B] to-[#0B2742] text-white relative overflow-hidden">
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-[#C47A32]/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div>
+          <Link to="/" className="inline-block mb-1 hover:opacity-90 transition-opacity" style={{ textDecoration: 'none' }}>
+            <span className="civicwatch-logo text-2xl font-black text-white">
               Civic<span style={{ color: 'var(--saffron)' }}>Watch</span>
             </span>
           </Link>
-        </div>
-        <div className="text-xs mb-10" style={{ color: 'rgba(255,255,255,0.4)' }}>Municipal Services Portal</div>
-        <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#fff' }}>
-          Join CivicWatch as a Citizen
-        </h2>
-        <p className="text-sm leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Create an account to report civic issues in your neighborhood, track their resolution in real time, and verify fixes.
-        </p>
-        {['Quick 60-second sign up', 'Direct department accountability', 'Transparent status updates'].map(f => (
-          <div key={f} className="flex items-center gap-2 text-sm mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: 'var(--green)', color: '#fff' }}>✓</span>
-            {f}
+          <div className="text-xs text-white/50 font-mono tracking-wider uppercase mb-12">
+            Citizen Registration
           </div>
-        ))}
+
+          <h2 className="text-3xl font-extrabold leading-tight mb-4 font-display">
+            Join thousands of active citizens making their wards better.
+          </h2>
+          <p className="text-sm leading-relaxed text-white/70 mb-10">
+            Sign up to report civic problems directly to your ward officials, follow resolution timelines in real time, and verify fixes before complaints are closed.
+          </p>
+
+          <div className="space-y-4">
+            {[
+              'Direct citizen feedback and dispute power',
+              'Evidence photo tracking for all complaints',
+              'Understand the reason behind every status change',
+              'Free, public municipal service'
+            ].map((f, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm text-white/80">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-[#3F6B52] text-white shrink-0">
+                  ✓
+                </span>
+                <span>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-8 border-t border-white/10 text-xs text-white/40 flex justify-between">
+          <span>Secure JWT Authentication</span>
+          <span>MongoDB Atlas Connected</span>
+        </div>
       </div>
 
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
           <div className="lg:hidden mb-8 text-center">
             <Link to="/" style={{ textDecoration: 'none' }}>
               <CivicLogo size="lg" />
             </Link>
+            <p className="text-xs text-[#66727A] mt-1">Citizen Portal Registration</p>
           </div>
-          <h2 className="text-2xl font-bold mb-1" style={{ color: 'var(--navy)' }}>Create an account</h2>
-          <p className="text-sm mb-7" style={{ color: 'var(--text-secondary)' }}>Sign up as a citizen to report issues</p>
 
-          {error && (
-            <div className="mb-4 p-3 rounded text-sm" style={{ background: 'var(--red-bg)', border: '1px solid rgba(155,65,65,0.25)', color: 'var(--red)' }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleRegister}>
-            <div className="form-group">
-              <label className="form-label">Full Name *</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Priya Sharma"
-                value={name}
-                onChange={e => { setName(e.target.value); setError(''); }}
-                required
-              />
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-8 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-[#12345B] tracking-tight">Create your account</h2>
+              <p className="text-sm text-[#66727A] mt-1">Register to start reporting civic issues in your neighborhood</p>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Email Address *</label>
-              <input
-                type="email"
-                className="form-input"
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => { setEmail(e.target.value); setError(''); }}
-                required
-              />
+            {error && (
+              <div className="mb-5 p-3.5 rounded-lg text-xs font-medium flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 animate-fadeIn">
+                <span>⚠️</span> {error}
+              </div>
+            )}
+
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div>
+                <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">Full Name *</label>
+                <input
+                  type="text"
+                  className="form-input rounded-lg text-sm"
+                  placeholder="e.g. Priya Sharma"
+                  value={name}
+                  onChange={e => { setName(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">Email Address *</label>
+                <input
+                  type="email"
+                  className="form-input rounded-lg text-sm"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">Mobile Number (Optional)</label>
+                <input
+                  type="tel"
+                  className="form-input rounded-lg text-sm"
+                  placeholder="9876543210"
+                  value={phone}
+                  onChange={e => { setPhone(e.target.value); setError(''); }}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">Password *</label>
+                  <input
+                    type="password"
+                    className="form-input rounded-lg text-sm"
+                    placeholder="Min 6 characters"
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setError(''); }}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">Confirm *</label>
+                  <input
+                    type="password"
+                    className="form-input rounded-lg text-sm"
+                    placeholder="Re-enter password"
+                    value={confirmPassword}
+                    onChange={e => { setConfirmPassword(e.target.value); setError(''); }}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-saffron glow-saffron w-full justify-center text-sm py-3 rounded-lg font-bold mt-2 cursor-pointer shadow-md"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Complete Registration'}
+              </button>
+            </form>
+
+            <div className="text-center text-xs text-[#66727A] mt-6 pt-5 border-t border-[#E7E6E1]">
+              Already have an account?{' '}
+              <Link to="/login" className="font-bold text-[#12345B] hover:text-[#C47A32] transition-colors" style={{ textDecoration: 'none' }}>
+                Sign in here →
+              </Link>
             </div>
-
-            <div className="form-group">
-              <label className="form-label">Phone Number</label>
-              <input
-                type="tel"
-                className="form-input"
-                placeholder="9876543210"
-                value={phone}
-                onChange={e => { setPhone(e.target.value); setError(''); }}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Password *</label>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError(''); }}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Confirm Password *</label>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="Re-enter password"
-                value={confirmPassword}
-                onChange={e => { setConfirmPassword(e.target.value); setError(''); }}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary w-full justify-center text-sm py-2.5 mb-4"
-              disabled={loading}
-            >
-              {loading ? 'Creating account...' : 'Create Account'}
-            </button>
-          </form>
-
-          <div className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:underline" style={{ color: 'var(--navy)', textDecoration: 'none' }}>
-              Sign in
-            </Link>
           </div>
         </div>
       </div>

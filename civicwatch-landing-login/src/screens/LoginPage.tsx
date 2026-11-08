@@ -35,112 +35,156 @@ export function LoginPage() {
     }
   }
 
+  const demoAccounts = [
+    { role: 'Citizen', label: 'Priya Sharma (Citizen)', email: 'priya.sharma@email.com', color: 'badge-reported' },
+    { role: 'Officer', label: 'Rajan Kumar (Roads Dept)', email: 'rajan.kumar@civic.gov.in', color: 'badge-assigned' },
+    { role: 'Admin', label: 'Administrator', email: 'admin@civic.gov.in', color: 'badge-inprogress' }
+  ];
+
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
-      {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-center px-12 w-96 flex-shrink-0" style={{ background: 'var(--navy-dark)' }}>
-        <div className="mb-1">
-          <Link to="/" style={{ textDecoration: 'none' }}>
-            <span className="civicwatch-logo text-xl" style={{ color: '#fff' }}>
+    <div className="min-h-screen flex selection:bg-[#C47A32]/20" style={{ background: 'var(--bg)' }}>
+      {/* Left panel - Decorative Branding */}
+      <div className="hidden lg:flex flex-col justify-between p-12 w-[440px] flex-shrink-0 bg-gradient-to-br from-[#0B2742] via-[#12345B] to-[#0B2742] text-white relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-[#C47A32]/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div>
+          <Link to="/" className="inline-block mb-1 hover:opacity-90 transition-opacity" style={{ textDecoration: 'none' }}>
+            <span className="civicwatch-logo text-2xl font-black text-white">
               Civic<span style={{ color: 'var(--saffron)' }}>Watch</span>
             </span>
           </Link>
-        </div>
-        <div className="text-xs mb-10" style={{ color: 'rgba(255,255,255,0.4)' }}>Municipal Services Portal</div>
-        <h2 className="text-2xl font-bold mb-3 leading-tight" style={{ color: '#fff' }}>
-          Track and resolve civic issues with full transparency
-        </h2>
-        <p className="text-sm leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          CivicWatch ensures every complaint reaches the right department and is resolved with accountability.
-        </p>
-        {['Report civic issues instantly', 'Real-time status tracking', 'Verified resolutions'].map(f => (
-          <div key={f} className="flex items-center gap-2 text-sm mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            <span className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: 'var(--green)', color: '#fff' }}>✓</span>
-            {f}
+          <div className="text-xs text-white/50 font-mono tracking-wider uppercase mb-12">
+            Municipal Services Portal
           </div>
-        ))}
+
+          <h2 className="text-3xl font-extrabold leading-tight mb-4 font-display">
+            Track and resolve civic issues with verified accountability.
+          </h2>
+          <p className="text-sm leading-relaxed text-white/70 mb-10">
+            Every reported issue is directly assigned to the responsible ward officer, with photo proof required for closure.
+          </p>
+
+          <div className="space-y-4">
+            {[
+              'Report civic problems in under 60s',
+              'Real-time transparent status explanations',
+              'Citizen-verified resolution before ticket closes',
+              'Direct ward officer accountability'
+            ].map((f, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm text-white/80">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold bg-[#3F6B52] text-white shrink-0">
+                  ✓
+                </span>
+                <span>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pt-8 border-t border-white/10 text-xs text-white/40 flex justify-between">
+          <span>RV University · CS3301</span>
+          <span>Phase 2 Production</span>
+        </div>
       </div>
 
-      {/* Right panel */}
+      {/* Right panel - Login Card */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
           <div className="lg:hidden mb-8 text-center">
             <Link to="/" style={{ textDecoration: 'none' }}>
               <CivicLogo size="lg" />
             </Link>
-          </div>
-          <h2 className="text-2xl font-bold mb-1" style={{ color: 'var(--navy)' }}>Welcome back</h2>
-          <p className="text-sm mb-7" style={{ color: 'var(--text-secondary)' }}>Sign in to your CivicWatch account</p>
-
-          {error && (
-            <div className="mb-4 p-3 rounded text-sm" style={{ background: 'var(--red-bg)', border: '1px solid rgba(155,65,65,0.25)', color: 'var(--red)' }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleLogin}>
-            <div className="form-group">
-              <label className="form-label">Email Address</label>
-              <input
-                type="email"
-                className="form-input"
-                placeholder="you@example.com"
-                value={email}
-                onChange={e => { setEmail(e.target.value); setError(''); }}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                className="form-input"
-                placeholder="Enter your password"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError(''); }}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary w-full justify-center text-sm py-2.5 mb-4"
-              disabled={loading}
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-
-          <div className="text-center text-sm" style={{ color: 'var(--text-secondary)' }}>
-            New to CivicWatch?{' '}
-            <Link to="/register" className="font-semibold hover:underline" style={{ color: 'var(--navy)', textDecoration: 'none' }}>
-              Create an account
-            </Link>
+            <p className="text-xs text-[#66727A] mt-1">Municipal Issue Management</p>
           </div>
 
-          {/* Demo credentials */}
-          <div className="mt-8 p-4 rounded" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-            <div className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Demo Credentials</div>
-            <div className="space-y-2 text-xs">
-              {[
-                { role: 'Citizen', cls: 'badge-reported', email: 'priya.sharma@email.com' },
-                { role: 'Officer', cls: 'badge-assigned', email: 'rajan.kumar@civic.gov.in' },
-                { role: 'Admin', cls: 'badge-inprogress', email: 'admin@civic.gov.in' },
-              ].map(d => (
-                <div key={d.role} className="flex items-center justify-between">
-                  <span className={`badge ${d.cls}`}>{d.role}</span>
-                  <button
-                    type="button"
-                    className="hover:underline font-mono text-xs"
-                    style={{ color: 'var(--navy)', background: 'none', border: 'none', cursor: 'pointer' }}
-                    onClick={() => { setEmail(d.email); setPassword('password'); setError(''); }}
-                  >
-                    {d.email}
-                  </button>
+          <div className="bg-white rounded-2xl border border-[#D5D7D4] p-8 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-2xl font-black text-[#12345B] tracking-tight">Welcome back</h2>
+              <p className="text-sm text-[#66727A] mt-1">Sign in to your CivicWatch account</p>
+            </div>
+
+            {error && (
+              <div className="mb-5 p-3.5 rounded-lg text-xs font-medium flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 animate-fadeIn">
+                <span>⚠️</span> {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="form-label text-xs uppercase tracking-wider text-[#66727A]">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  className="form-input rounded-lg text-sm transition-all focus:border-[#12345B]"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-0">
+                    Password
+                  </label>
                 </div>
+                <input
+                  type="password"
+                  className="form-input rounded-lg text-sm transition-all focus:border-[#12345B]"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={e => { setPassword(e.target.value); setError(''); }}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary w-full justify-center text-sm py-3 rounded-lg font-bold shadow-md hover:bg-[#0B2742] transition-all cursor-pointer mt-2"
+                disabled={loading}
+              >
+                {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
+              </button>
+            </form>
+
+            <div className="text-center text-xs text-[#66727A] mt-6 pt-5 border-t border-[#E7E6E1]">
+              New citizen user?{' '}
+              <Link to="/register" className="font-bold text-[#12345B] hover:text-[#C47A32] transition-colors" style={{ textDecoration: 'none' }}>
+                Create an account →
+              </Link>
+            </div>
+          </div>
+
+          {/* Quick Demo Credentials Pill Selector */}
+          <div className="mt-6 p-4 rounded-xl bg-[#EFEDE8] border border-[#D5D7D4]">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E9BAA]">
+                ⚡ Quick Demo Sign-In
+              </span>
+              <span className="text-[10px] text-[#66727A] font-mono">Password: password</span>
+            </div>
+            <div className="space-y-1.5">
+              {demoAccounts.map(d => (
+                <button
+                  key={d.role}
+                  type="button"
+                  onClick={() => { setEmail(d.email); setPassword('password'); setError(''); }}
+                  className="w-full text-left px-3 py-2 rounded-lg bg-white border border-[#D5D7D4] hover:border-[#12345B] hover:bg-slate-50 transition-all flex items-center justify-between text-xs cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`badge ${d.color} text-[10px]`}>{d.role}</span>
+                    <span className="font-medium text-[#12345B] group-hover:text-[#C47A32]">{d.label}</span>
+                  </div>
+                  <span className="text-[10px] text-[#8E9BAA] font-mono">Click to autofill</span>
+                </button>
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </div>
