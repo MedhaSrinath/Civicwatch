@@ -1,0 +1,11 @@
+{
+  "name": "civicwatch-project",
+  "version": "1.0.0",
+  "description": "CivicWatch - Civic Complaint Management Platform",
+  "scripts": {
+    "server": "cd server && node server.js",
+    "client": "cd civicwatch-landing-login && npm run dev",
+    "seed": "cd server && node seed.js",
+    "build": "cd civicwatch-landing-login && npm run build"
+  }
+}
