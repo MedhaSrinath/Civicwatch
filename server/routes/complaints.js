@@ -2,15 +2,17 @@ const express = require('express');
 const { body } = require('express-validator');
 const {
   createComplaint, getComplaints, getComplaint,
-  assignComplaint, updateComplaintStatus, citizenFeedback, getStats
+  assignComplaint, updateComplaintStatus, citizenFeedback, getStats,
+  getMapComplaints
 } = require('../controllers/complaintController');
 const { protect, authorize } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
 
-// Stats route must be before /:id to avoid conflict
+// Specific routes before /:id parameter to avoid route conflicts
 router.get('/stats', protect, authorize('admin'), getStats);
+router.get('/map', protect, getMapComplaints);
 
 router.route('/')
   .get(protect, getComplaints)

@@ -65,7 +65,14 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb { background: #C9C8C3; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #A0A09A; }
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+/* ── Custom Civic Leaflet Marker ───────────────────────── */
+.custom-civic-marker {
+  background: transparent !important;
+  border: none !important;
+}
+.custom-civic-marker svg {
+  display: block;
+}
 .sidebar {
   background: var(--navy-dark);
   min-height: 100vh;

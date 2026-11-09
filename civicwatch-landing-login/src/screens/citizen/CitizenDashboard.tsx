@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import type { Complaint } from '../../types';
 import { Navbar } from '../../components/Navbar';
+import { CivicMap } from '../../components/CivicMap';
 import toast from 'react-hot-toast';
 
 export function CitizenDashboard() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [mapComplaints, setMapComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +16,7 @@ export function CitizenDashboard() {
 
   useEffect(() => {
     fetchComplaints();
+    fetchMapComplaints();
   }, []);
 
   const fetchComplaints = async () => {
@@ -25,6 +28,15 @@ export function CitizenDashboard() {
       toast.error('Failed to load complaints');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMapComplaints = async () => {
+    try {
+      const res = await API.get('/complaints/map');
+      setMapComplaints(res.data);
+    } catch (err: any) {
+      console.error('Failed to load city map complaints', err);
     }
   };
 
@@ -264,6 +276,17 @@ export function CitizenDashboard() {
             ))}
           </div>
         )}
+
+        {/* ── City-Wide Civic Issues Map ────────────────────────────── */}
+        <div className="mt-12">
+          <CivicMap
+            complaints={mapComplaints}
+            height="440px"
+            showLegend={true}
+            title="Civic Issues in Your City"
+            subtitle="Explore reported civic issues across Bengaluru. Click pins to view details of your complaints."
+          />
+        </div>
       </main>
     </div>
   );

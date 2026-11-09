@@ -50,6 +50,10 @@ const complaintSchema = new mongoose.Schema({
     required: [true, 'Location is required'],
     trim: true
   },
+  coordinates: {
+    lat: { type: Number, default: null },
+    lng: { type: Number, default: null }
+  },
   photo: {
     type: String // file path for uploaded evidence photo
   },

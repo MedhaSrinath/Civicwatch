@@ -84,6 +84,109 @@ const seedData = async () => {
     console.log(`  Officer: sunita.verma@civic.gov.in / password`);
     console.log(`  Citizen: priya.sharma@email.com / password`);
 
+    const Complaint = require('./models/Complaint');
+    await Complaint.deleteMany({});
+
+    // Seed Complaints with realistic Bengaluru Coordinates
+    const complaints = await Complaint.insertMany([
+      {
+        complaintId: 'CW-2026-00001',
+        title: 'Dangerous Pothole on 100ft Road',
+        description: 'Large pothole in the right lane near Indiranagar metro station causing severe bike swerving.',
+        category: categories[0]._id, // Potholes
+        location: '100ft Road, Indiranagar, Ward 104',
+        coordinates: { lat: 12.9784, lng: 77.6408 },
+        citizen: citizen._id,
+        department: departments[0]._id, // Roads
+        assignedOfficer: officer1._id,
+        priority: 'High',
+        status: 'Resolved',
+        statusExplanation: 'The officer has marked this issue as resolved. Awaiting citizen confirmation.',
+        resolutionRemarks: 'Asphalt patched, rolled and inspected by junior engineer.',
+        statusHistory: [
+          { status: 'Pending', explanation: 'Complaint submitted by citizen.', changedBy: citizen._id },
+          { status: 'Assigned', explanation: 'Admin assigned complaint to officer Rajan Kumar.', changedBy: admin._id },
+          { status: 'In Progress', explanation: 'Road repair crew dispatched on site.', changedBy: officer1._id },
+          { status: 'Resolved', explanation: 'The officer has marked this issue as resolved.', changedBy: officer1._id }
+        ]
+      },
+      {
+        complaintId: 'CW-2026-00002',
+        title: 'Overflowing Garbage Bin near Vegetable Market',
+        description: 'Garbage accumulation overflowing on the sidewalk for 3 consecutive days.',
+        category: categories[1]._id, // Garbage
+        location: '8th Cross, Sampige Road, Malleshwaram',
+        coordinates: { lat: 13.0031, lng: 77.5643 },
+        citizen: citizen._id,
+        priority: 'High',
+        status: 'Pending',
+        statusExplanation: 'Your complaint has been submitted and is awaiting review by the administration.',
+        statusHistory: [
+          { status: 'Pending', explanation: 'Complaint submitted by citizen.', changedBy: citizen._id }
+        ]
+      },
+      {
+        complaintId: 'CW-2026-00003',
+        title: 'Streetlights Out for 200m Stretch',
+        description: 'Multiple streetlights non-operational creating dangerous dark spot for pedestrians.',
+        category: categories[2]._id, // Streetlights
+        location: '5th Block, Koramangala 80ft Road',
+        coordinates: { lat: 12.9352, lng: 77.6245 },
+        citizen: citizen._id,
+        department: departments[3]._id, // Electricity
+        assignedOfficer: officer1._id,
+        priority: 'Medium',
+        status: 'In Progress',
+        statusExplanation: 'Work in progress – Electrician team replacing damaged timer switch and LED bulbs.',
+        statusHistory: [
+          { status: 'Pending', explanation: 'Complaint submitted by citizen.', changedBy: citizen._id },
+          { status: 'Assigned', explanation: 'Admin assigned complaint to officer.', changedBy: admin._id },
+          { status: 'In Progress', explanation: 'Electrician team replacing damaged timer switch.', changedBy: officer1._id }
+        ]
+      },
+      {
+        complaintId: 'CW-2026-00004',
+        title: 'Open Drainage Manhole Cover Missing',
+        description: 'Stormwater manhole lid damaged and missing. High pedestrian risk especially at night.',
+        category: categories[3]._id, // Drainage
+        location: '4th Block, 11th Main Road, Jayanagar',
+        coordinates: { lat: 12.9250, lng: 77.5938 },
+        citizen: citizen._id,
+        department: departments[0]._id, // Roads
+        assignedOfficer: officer1._id,
+        priority: 'High',
+        status: 'Assigned',
+        statusExplanation: 'Your complaint has been reviewed and assigned to a responsible officer.',
+        statusHistory: [
+          { status: 'Pending', explanation: 'Complaint submitted by citizen.', changedBy: citizen._id },
+          { status: 'Assigned', explanation: 'Admin assigned complaint to officer.', changedBy: admin._id }
+        ]
+      },
+      {
+        complaintId: 'CW-2026-00005',
+        title: 'Broken Water Supply Feeder Pipe',
+        description: 'Clean drinking water gushing onto the road from underground feeder line.',
+        category: categories[4]._id, // Water Leakage
+        location: 'Sector 2, 14th Main, HSR Layout',
+        coordinates: { lat: 12.9121, lng: 77.6446 },
+        citizen: citizen._id,
+        department: departments[1]._id, // Water Supply
+        assignedOfficer: officer2._id,
+        priority: 'High',
+        status: 'Reopened',
+        statusExplanation: 'Citizen disputed the resolution – Valve still leaking under pressure.',
+        citizenFeedback: null,
+        citizenFeedbackRemarks: 'Valve was wrapped with tape but started leaking again within 2 hours.',
+        statusHistory: [
+          { status: 'Pending', explanation: 'Complaint submitted by citizen.', changedBy: citizen._id },
+          { status: 'Assigned', explanation: 'Admin assigned complaint to officer.', changedBy: admin._id },
+          { status: 'Resolved', explanation: 'Officer marked resolved.', changedBy: officer2._id },
+          { status: 'Reopened', explanation: 'Citizen disputed the resolution – Valve still leaking under pressure.', changedBy: citizen._id }
+        ]
+      }
+    ]);
+    console.log(`Created ${complaints.length} sample complaints with Bengaluru coordinates`);
+
     console.log('\nSeed completed successfully!');
     process.exit(0);
   } catch (error) {

@@ -47,6 +47,11 @@ export interface Complaint {
   description: string;
   category: Category | string;
   location: string;
+  coordinates?: {
+    lat: number | null;
+    lng: number | null;
+  } | null;
+  isOwner?: boolean;
   photo?: string;
   citizen: User;
   department?: Department;

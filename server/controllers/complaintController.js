@@ -11,7 +11,7 @@ const createComplaint = async (req, res) => {
       return res.status(400).json({ message: errors.array()[0].msg });
     }
 
-    const { title, description, category, location } = req.body;
+    const { title, description, category, location, lat, lng } = req.body;
 
     const complaintData = {
       title,
@@ -26,6 +26,13 @@ const createComplaint = async (req, res) => {
         changedBy: req.user._id
       }]
     };
+
+    if (lat !== undefined && lng !== undefined && !isNaN(Number(lat)) && !isNaN(Number(lng))) {
+      complaintData.coordinates = {
+        lat: Number(lat),
+        lng: Number(lng)
+      };
+    }
 
     if (req.file) {
       complaintData.photo = req.file.filename;
@@ -323,7 +330,47 @@ const getStats = async (req, res) => {
   }
 };
 
+// @desc    Get complaints for interactive map
+// @route   GET /api/complaints/map
+// @access  Private (Role-scoped)
+const getMapComplaints = async (req, res) => {
+  try {
+    // Only fetch complaints that have valid coordinates
+    let filter = {
+      'coordinates.lat': { $ne: null },
+      'coordinates.lng': { $ne: null }
+    };
+
+    if (req.user.role === 'officer') {
+      filter.assignedOfficer = req.user._id;
+    }
+
+    // Select only the fields needed by the map; omit private citizen information
+    const complaints = await Complaint.find(filter)
+      .select('complaintId title category location coordinates status priority createdAt statusExplanation citizen')
+      .populate('category', 'name')
+      .populate('department', 'name')
+      .lean();
+
+    // For citizens, mark whether the complaint belongs to the logged-in citizen
+    const sanitized = complaints.map(c => {
+      const isOwner = c.citizen && c.citizen.toString() === req.user._id.toString();
+      const { citizen, ...rest } = c;
+      return {
+        ...rest,
+        isOwner: req.user.role === 'admin' || req.user.role === 'officer' || isOwner
+      };
+    });
+
+    res.json(sanitized);
+  } catch (error) {
+    console.error('Get map complaints error:', error);
+    res.status(500).json({ message: 'Server error fetching map complaints' });
+  }
+};
+
 module.exports = {
   createComplaint, getComplaints, getComplaint,
-  assignComplaint, updateComplaintStatus, citizenFeedback, getStats
+  assignComplaint, updateComplaintStatus, citizenFeedback, getStats,
+  getMapComplaints
 };

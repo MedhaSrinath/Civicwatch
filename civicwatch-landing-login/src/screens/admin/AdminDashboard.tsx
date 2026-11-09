@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import type { Complaint, Department, Category, User, Stats } from '../../types';
 import { Navbar } from '../../components/Navbar';
+import { CivicMap } from '../../components/CivicMap';
 import toast from 'react-hot-toast';
 
 export function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'complaints' | 'stats' | 'users' | 'departments' | 'categories'>('complaints');
+  const [activeTab, setActiveTab] = useState<'complaints' | 'map' | 'stats' | 'users' | 'departments' | 'categories'>('complaints');
   const navigate = useNavigate();
 
   // Complaints state
@@ -14,6 +15,10 @@ export function AdminDashboard() {
   const [loadingComplaints, setLoadingComplaints] = useState(false);
   const [statusFilter, setStatusFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
+
+  // Map state
+  const [mapComplaints, setMapComplaints] = useState<Complaint[]>([]);
+  const [loadingMap, setLoadingMap] = useState(false);
 
   // Stats state
   const [stats, setStats] = useState<Stats | null>(null);
@@ -57,12 +62,26 @@ export function AdminDashboard() {
   useEffect(() => {
     fetchMetadata();
     fetchComplaints();
+    fetchMapComplaints();
   }, []);
 
   useEffect(() => {
+    if (activeTab === 'map') fetchMapComplaints();
     if (activeTab === 'stats') fetchStats();
     if (activeTab === 'users') fetchUsers();
   }, [activeTab]);
+
+  const fetchMapComplaints = async () => {
+    try {
+      setLoadingMap(true);
+      const res = await API.get('/complaints/map');
+      setMapComplaints(res.data);
+    } catch (err) {
+      console.error('Failed to load map complaints', err);
+    } finally {
+      setLoadingMap(false);
+    }
+  };
 
   const fetchMetadata = async () => {
     try {
@@ -261,6 +280,7 @@ export function AdminDashboard() {
         <div className="tab-bar mb-6 overflow-x-auto">
           {[
             { id: 'complaints', label: 'All Complaints' },
+            { id: 'map', label: '🗺️ Civic Issue Map' },
             { id: 'stats', label: 'Analytics & Reports' },
             { id: 'users', label: 'User Management' },
             { id: 'departments', label: 'Departments' },
@@ -410,7 +430,65 @@ export function AdminDashboard() {
           </div>
         )}
 
-        {/* TAB 2: ANALYTICS & STATS */}
+        {/* TAB 2: CIVIC ISSUE MAP */}
+        {activeTab === 'map' && (
+          <div className="space-y-6">
+            {/* Live Database Summary Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Mapped Issues</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: 'var(--navy)' }}>
+                  {mapComplaints.length}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Pending</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: '#9B4141' }}>
+                  {mapComplaints.filter(c => c.status === 'Pending').length}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Assigned</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: '#12345B' }}>
+                  {mapComplaints.filter(c => c.status === 'Assigned').length}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>In Progress</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: '#C47A32' }}>
+                  {mapComplaints.filter(c => c.status === 'In Progress').length}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Resolved</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: '#3F6B52' }}>
+                  {mapComplaints.filter(c => c.status === 'Resolved' || c.status === 'Closed').length}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="text-xs uppercase font-semibold" style={{ color: 'var(--text-muted)' }}>Reopened</div>
+                <div className="text-2xl font-bold mt-1" style={{ color: '#66727A' }}>
+                  {mapComplaints.filter(c => c.status === 'Reopened').length}
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Leaflet Map */}
+            {loadingMap ? (
+              <div className="text-center py-12" style={{ color: 'var(--text-muted)' }}>Loading civic map...</div>
+            ) : (
+              <CivicMap
+                complaints={mapComplaints}
+                height="560px"
+                showLegend={true}
+                title="Bengaluru Municipal Issue Map"
+                subtitle="Live geographic distribution of civic complaints across wards. Click a pin to open details."
+              />
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: ANALYTICS & STATS */}
         {activeTab === 'stats' && (
           <div>
             {loadingStats || !stats ? (

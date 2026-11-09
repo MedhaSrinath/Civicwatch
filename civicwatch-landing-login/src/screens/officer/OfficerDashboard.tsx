@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import type { Complaint } from '../../types';
 import { Navbar } from '../../components/Navbar';
+import { CivicMap } from '../../components/CivicMap';
 import toast from 'react-hot-toast';
 
 export function OfficerDashboard() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [mapComplaints, setMapComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ export function OfficerDashboard() {
 
   useEffect(() => {
     fetchAssignedComplaints();
+    fetchMapComplaints();
   }, []);
 
   const fetchAssignedComplaints = async () => {
@@ -31,6 +34,15 @@ export function OfficerDashboard() {
       toast.error('Failed to load assigned complaints');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMapComplaints = async () => {
+    try {
+      const res = await API.get('/complaints/map');
+      setMapComplaints(res.data);
+    } catch (err) {
+      console.error('Failed to load officer map complaints', err);
     }
   };
 
@@ -284,6 +296,17 @@ export function OfficerDashboard() {
             ))}
           </div>
         )}
+
+        {/* ── Officer Assigned Complaints Field Map ───────────────────── */}
+        <div className="mt-12">
+          <CivicMap
+            complaints={mapComplaints}
+            height="440px"
+            showLegend={true}
+            title="Your Assigned Complaints – Field Operations Map"
+            subtitle="Geographic view of civic issues assigned to you across wards. Plan field repairs efficiently."
+          />
+        </div>
 
         {/* Modal for Status Update */}
         {selectedComplaint && (

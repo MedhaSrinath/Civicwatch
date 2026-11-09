@@ -10,6 +10,7 @@ export function ReportIssuePage() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [location, setLocation] = useState('');
+  const [selectedWardCoords, setSelectedWardCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -64,6 +65,10 @@ export function ReportIssuePage() {
       formData.append('description', description);
       formData.append('category', category);
       formData.append('location', location);
+      if (selectedWardCoords) {
+        formData.append('lat', String(selectedWardCoords.lat));
+        formData.append('lng', String(selectedWardCoords.lng));
+      }
       if (photo) {
         formData.append('photo', photo);
       }
@@ -166,19 +171,60 @@ export function ReportIssuePage() {
 
             {/* Location */}
             <div>
-              <label className="form-label text-xs uppercase tracking-wider text-[#66727A] mb-1.5 block">
-                3. Exact Location / Nearest Landmark *
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="form-label text-xs uppercase tracking-wider text-[#66727A] block">
+                  3. Exact Location & Ward *
+                </label>
+                <span className="text-[11px] text-[#C47A32] font-semibold">
+                  {selectedWardCoords ? '📍 Map Coordinates Active' : 'Select Ward for Map Pin'}
+                </span>
+              </div>
+
+              {/* Quick Area / Ward Preset Picker */}
+              <div className="mb-2">
+                <select
+                  className="form-input rounded-lg text-xs font-medium bg-[#F6F5F1] text-[#12345B] border-[#D5D7D4]"
+                  defaultValue=""
+                  onChange={(e) => {
+                    if (!e.target.value) {
+                      setSelectedWardCoords(null);
+                      return;
+                    }
+                    const [areaName, latStr, lngStr] = e.target.value.split('|');
+                    const lat = parseFloat(latStr);
+                    const lng = parseFloat(lngStr);
+                    setSelectedWardCoords({ lat, lng });
+                    if (!location || location.includes('Bengaluru')) {
+                      setLocation(`${areaName}, Bengaluru`);
+                    }
+                  }}
+                >
+                  <option value="">-- Choose Bengaluru Ward / Locality (Auto-pins on Map) --</option>
+                  <option value="Indiranagar, Ward 104|12.9784|77.6408">Indiranagar (Ward 104)</option>
+                  <option value="Koramangala, Ward 151|12.9352|77.6245">Koramangala (Ward 151)</option>
+                  <option value="Malleshwaram, Ward 65|13.0031|77.5643">Malleshwaram (Ward 65)</option>
+                  <option value="Jayanagar, Ward 153|12.9250|77.5938">Jayanagar (Ward 153)</option>
+                  <option value="HSR Layout, Ward 174|12.9121|77.6446">HSR Layout (Ward 174)</option>
+                  <option value="Whitefield, Ward 84|12.9698|77.7500">Whitefield (Ward 84)</option>
+                  <option value="Hebbal, Ward 21|13.0358|77.5970">Hebbal (Ward 21)</option>
+                  <option value="BTM Layout, Ward 176|12.9165|77.6101">BTM Layout (Ward 176)</option>
+                  <option value="Basavanagudi, Ward 154|12.9421|77.5753">Basavanagudi (Ward 154)</option>
+                  <option value="Rajajinagar, Ward 99|12.9981|77.5530">Rajajinagar (Ward 99)</option>
+                </select>
+              </div>
+
               <input
                 type="text"
                 className="form-input rounded-lg text-sm"
-                placeholder="e.g. 5th Main Road, Opposite Canara Bank, Ward 12, Bengaluru"
+                placeholder="e.g. 5th Main Road, Opposite Canara Bank, Indiranagar, Bengaluru"
                 value={location}
                 onChange={e => setLocation(e.target.value)}
                 required
               />
               <span className="text-[11px] text-[#8E9BAA] mt-1 block">
-                Include ward, street number, or prominent landmark for field officers
+                {selectedWardCoords
+                  ? `Selected coordinates: [${selectedWardCoords.lat.toFixed(4)}, ${selectedWardCoords.lng.toFixed(4)}] - will be pinned on the city map.`
+                  : 'Select an area above or type your specific street and landmark.'}
               </span>
             </div>
 
